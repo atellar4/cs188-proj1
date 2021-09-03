@@ -86,8 +86,48 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    # Start: A
+    # Is the start a goal? False
+    # Start's successors: [('B', '0:A->B', 1.0), ('C', '1:A->C', 2.0), ('D', '2:A->D', 4.0)]
+                         # (successor, action, stepCost)
+
+    # Return: ['2:A->B2', '0:B2->C', '0:C->D', '2:D->E2', '0:E2->F', '0:F->G']
+    # piazza: add paths to stack -- add tuple (node, path to that node)
+
+    visited_nodes = []
+    path = []
+    stack = util.Stack()
+
+    stack.push((problem.getStartState(), path)) # Add start state and path to stack
+    
+    while not stack.isEmpty():
+        # Pop node from stack
+        node_and_path = stack.pop()
+        
+        curr_node = node_and_path[0]        
+        curr_path = node_and_path[1]
+
+        # check if current node is the goal
+        if problem.isGoalState(curr_node):
+            return curr_path
+
+        # check if curent node has been visited
+        if (curr_node not in visited_nodes):
+            visited_nodes.append(curr_node)
+                        
+            #   loop through adjacent nodes, 
+            #       if visited -> ignore
+            #       not visited -> add to stack
+
+            for triple in problem.getSuccessors(curr_node):
+                successor_path = []
+                if (triple[0] not in visited_nodes):
+                    successor_path = curr_path
+                    print(successor_path)
+                    successor_path.append(triple[1])
+                    stack.push((triple[0], successor_path))
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
