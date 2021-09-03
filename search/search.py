@@ -121,13 +121,12 @@ def depthFirstSearch(problem):
             #       not visited -> add to stack
 
             for triple in problem.getSuccessors(curr_node):
-                successor_path = []
                 if (triple[0] not in visited_nodes):
-                    successor_path = curr_path
-                    print(successor_path)
+                    successor_path = curr_path.copy()
                     successor_path.append(triple[1])
                     stack.push((triple[0], successor_path))
 
+    util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
