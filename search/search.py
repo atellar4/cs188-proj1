@@ -175,29 +175,34 @@ def uniformCostSearch(problem):
     visited_nodes = []
     path = []
     priority_queue = util.PriorityQueue()  # Create the priority queue
-    priority_queue.push(problem.getStartState(), 0) # Add the start state and cost (state, cost)
+    priority_queue.push((problem.getStartState(), path), 0) # Add the start state and cost ((state, path), cost)
 
     while not priority_queue.isEmpty():
-        node_and_cost = priority_queue.pop()
-        
-        print("Node and cost: ", node_and_cost)
+        node_and_path = priority_queue.pop()
+        # print("Node and path:", node_and_path)
 
-        curr_node = node_and_cost
+        curr_node = node_and_path[0]
+        curr_path = node_and_path[1]
+        curr_cost = problem.getCostOfActions(curr_path)
         # TODO: how do we access the node's cost..? -- tried a tuple but it was weird
         # Pop just returns the node name
 
         # check if current node is the goal
         if problem.isGoalState(curr_node):
-            return path
+            return curr_path
                 
         if curr_node not in visited_nodes:
             visited_nodes.append(curr_node)
             
             for triple in problem.getSuccessors(curr_node):
                 if (triple[0] not in visited_nodes):
-                    priority_queue.update(triple[0], triple[2]) # update pq if node is already in the pq
-                    cumulative_cost = triple[2] # TODO: add current cost here + triple[2]
-                    priority_queue.push(triple[0],cumulative_cost)
+                    # priority_queue.update(triple[0], triple[2]) # update pq if node is already in the pq
+                    cumulative_cost = curr_cost + triple[2] # TODO: add current cost here + triple[2]
+                    successor_path = curr_path.copy()
+                    successor_path.append(triple[1])
+                    # print('successor path:', successor_path)
+                    priority_queue.push((triple[0], successor_path), cumulative_cost)
+                    # print('pqpush:', (triple[0], successor_path))
 
     util.raiseNotDefined()
 
