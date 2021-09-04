@@ -165,7 +165,40 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
+
+    # From start state -> visit adjacent nodes -> choose node w/ least cost
+    # From all the unvisited nodes, adjacent nodes -> choose node w/ least cost
+    # Iterate through all possible paths even if we reach the goal state
+
+    # Return the actions path which gives the least total cost
+
+    visited_nodes = []
+    path = []
+    priority_queue = util.PriorityQueue()  # Create the priority queue
+    priority_queue.push(problem.getStartState(), 0) # Add the start state and cost (state, cost)
+
+    while not priority_queue.isEmpty():
+        node_and_cost = priority_queue.pop()
+        
+        print("Node and cost: ", node_and_cost)
+
+        curr_node = node_and_cost
+        # TODO: how do we access the node's cost..? -- tried a tuple but it was weird
+        # Pop just returns the node name
+
+        # check if current node is the goal
+        if problem.isGoalState(curr_node):
+            return path
+                
+        if curr_node not in visited_nodes:
+            visited_nodes.append(curr_node)
+            
+            for triple in problem.getSuccessors(curr_node):
+                if (triple[0] not in visited_nodes):
+                    priority_queue.update(triple[0], triple[2]) # update pq if node is already in the pq
+                    cumulative_cost = triple[2] # TODO: add current cost here + triple[2]
+                    priority_queue.push(triple[0],cumulative_cost)
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
