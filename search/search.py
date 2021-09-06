@@ -241,7 +241,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     cumulative_cost = curr_cost + triple[2]
                     successor_path = curr_path.copy()
                     successor_path.append(triple[1])
-                    priority_queue.push((triple[0], successor_path), cumulative_cost + heuristic(curr_node, problem))
+                    priority_queue.push((triple[0], successor_path), cumulative_cost + heuristic(triple[0], problem))
 
     util.raiseNotDefined()
 
