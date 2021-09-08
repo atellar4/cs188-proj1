@@ -287,21 +287,23 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        "*** YOUR CODE HERE ***"
+        self.cornersVisited = (0, 0, 0, 0) # bottom left, top left, bottom right, top right
+
 
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
+        # Start state: Pacman's position, location of the 4 corners
+        return (self.startingPosition, self.cornersVisited)
         util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
+        return state[1] == (1, 1, 1, 1)
         util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -318,14 +320,23 @@ class CornersProblem(search.SearchProblem):
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
+            currentPosition = state[0] # Get state's current position
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            x,y = currentPosition
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
-
+            if (not hitsWall):
+                # Append (successor, action, stepCost) to successors list
+                temp_corners_visited = state[1]
+                list_corners_visited = list(temp_corners_visited)
+                for i in range(len(self.corners)):
+                    if self.corners[i] == (nextx, nexty):
+                        list_corners_visited[i] = 1
+                        temp_corners_visited = tuple(list_corners_visited)
+                successors.append((((nextx, nexty), temp_corners_visited), action, 1))
+           
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
