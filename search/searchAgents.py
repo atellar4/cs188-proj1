@@ -370,7 +370,6 @@ def cornersHeuristic(state, problem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    "*** YOUR CODE HERE ***"
     # use util.manhattanDistance
     # get max among all manhattan distances between pacman and unvisited corners
     # state format: ((x, y), (0, 0, 0, 0)) bottom left, top left, bottom right, top right
@@ -485,9 +484,26 @@ def foodHeuristic(state, problem):
     # foodGrid contains the boolean state of each position
     # Get a list of food coordinates: foodGrid.asList()
     
+    # solutions only depend on the placement of walls, regular food and Pacman.
+
+    # You should use mazeDistance(currentPosition, food, problem.startingGameState) if you don't want to define additional functions.
+
+    # You should have some kind of check for whether there’s no food
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+
+    if len(foodGrid.asList()) == 0:
+        return 0
+
+    max_distance = 0
+    for food_pos in foodGrid.asList():
+        if (position, food_pos) in problem.heuristicInfo:
+            curr_distance = problem.heuristicInfo[(position, food_pos)]
+        else:
+            curr_distance = mazeDistance(position, food_pos, problem.startingGameState)
+            problem.heuristicInfo[(position, food_pos)] = curr_distance
+        if curr_distance > max_distance:
+            max_distance = curr_distance
+    return max_distance
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -515,9 +531,10 @@ class ClosestDotSearchAgent(SearchAgent):
         startPosition = gameState.getPacmanPosition()
         food = gameState.getFood()
         walls = gameState.getWalls()
-        problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
+        problem = AnyFoodSearchProblem(gameState)
+        return search.uniformCostSearch(problem)
+
         util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -551,9 +568,10 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         The state is Pacman's position. Fill this in with a goal test that will
         complete the problem definition.
         """
-        x,y = state
-
-        "*** YOUR CODE HERE ***"
+        x,y = state # (x, y)
+        currentFood = self.food
+    
+        return currentFood[x][y]
         util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
