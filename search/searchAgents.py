@@ -371,7 +371,20 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # use util.manhattanDistance
+    # get max among all manhattan distances between pacman and unvisited corners
+    # state format: ((x, y), (0, 0, 0, 0)) bottom left, top left, bottom right, top right
+    
+    pac_pos = state[0]
+    if state[1] == (1, 1, 1, 1):
+        return 0
+    max_distance = 0
+    for i in range(len(corners)):
+        if state[1][i] == 0:
+            curr_distance = util.manhattanDistance(pac_pos, corners[i])
+            if curr_distance > max_distance:
+                max_distance = curr_distance
+    return max_distance
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -463,6 +476,15 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+
+    # Access wall information: problem.walls - grid of where the walls are [[1,1], [x, y]] (assuming)
+    # Store information using problem.heuristicInfo - {'key': 'value'}
+        # problem.heuristicInfo['wallCount'] = problem.walls.count()
+    
+    # Pacman's position and foodGrid make up the state (position, foodGrid)
+    # foodGrid contains the boolean state of each position
+    # Get a list of food coordinates: foodGrid.asList()
+    
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
     return 0
